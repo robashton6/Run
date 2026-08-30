@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garage Build v2 - 6 Week Program</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:#080808;color:#f0ede8;font-family:-apple-system,system-ui,sans-serif;font-size:14px;min-height:100vh;}
+button{font-family:inherit;cursor:pointer;border:none;}
+input,textarea{font-family:inherit;}
+textarea{-webkit-appearance:none;border-radius:0;}
+.hero{padding:36px 18px 24px;text-align:center;border-bottom:1px solid #2a2a2a;background:linear-gradient(180deg,#111 0%,#080808 100%);}
+.hero-badge{display:inline-block;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#c9a84c;border:1px solid rgba(201,168,76,0.35);padding:5px 13px;margin-bottom:14px;}
+.hero-title{font-size:clamp(40px,11vw,68px);line-height:0.9;letter-spacing:1px;margin-bottom:4px;font-weight:700;}
+.hero-title span{color:#2aaa6a;}
+.hero-sub{font-size:11px;color:#6a6460;margin-top:12px;line-height:1.6;}
+.progress-wrap{padding:14px 18px 0;max-width:860px;margin:0 auto;}
+.progress-row{display:flex;justify-content:space-between;margin-bottom:7px;}
+.progress-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#6a6460;}
+.progress-val{font-size:18px;color:#c9a84c;font-weight:700;}
+.progress-bar{height:3px;background:#2a2a2a;border-radius:2px;overflow:hidden;margin-bottom:14px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#2aaa6a,#c9a84c);transition:width .5s;}
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid #2a2a2a;background:#111;position:sticky;top:0;z-index:50;-webkit-overflow-scrolling:touch;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:0 0 auto;padding:11px 14px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6a6460;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.tab.active{color:#2aaa6a;border-bottom-color:#2aaa6a;}
+.tab .cnt{margin-left:4px;font-size:9px;color:#c9a84c;}
+.main{max-width:860px;margin:0 auto;padding:18px;}
+.week-header{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #2a2a2a;}
+.week-title{font-size:26px;color:#2aaa6a;letter-spacing:1px;font-weight:700;}
+.week-desc{font-size:11px;color:#6a6460;margin-top:4px;line-height:1.6;}
+.week-km{font-size:11px;color:#c9a84c;margin-top:6px;font-weight:600;}
+.day-card{background:#111;border:1px solid #2a2a2a;margin-bottom:8px;}
+.day-card.done{border-color:rgba(42,170,106,0.4);}
+.day-header{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;}
+.day-num{font-size:22px;color:#2a2a2a;font-weight:700;min-width:32px;line-height:1;}
+.day-card.done .day-num{color:#2aaa6a;}
+.day-dow{font-size:9px;color:#6a6460;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.day-title{font-size:13px;font-weight:500;margin-bottom:4px;}
+.day-week{font-size:9px;color:#6a6460;}
+.day-chevron{font-size:11px;color:#6a6460;transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.day-card.open .day-chevron{transform:rotate(180deg);}
+.day-body{display:none;border-top:1px solid #2a2a2a;}
+.day-card.open .day-body{display:block;}
+.section{padding:14px;border-bottom:1px solid #222;}
+.section-label{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.section-label span{font-size:9px;letter-spacing:2px;text-transform:uppercase;flex-shrink:0;}
+.section-label::after{content:'';flex:1;height:1px;background:#2a2a2a;}
+.ex-row{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid #222;align-items:start;}
+.ex-row:last-of-type{border-bottom:none;}
+.ex-check{width:20px;height:20px;border:1.5px solid #2a2a2a;border-radius:2px;background:none;color:transparent;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:all .15s;cursor:pointer;}
+.ex-row.checked .ex-check{color:white;}
+.ex-row.checked .ex-name{text-decoration:line-through;color:#6a6460;}
+.ex-name{font-size:12px;font-weight:500;line-height:1.4;margin-bottom:2px;}
+.ex-sets{font-size:10px;color:#6a6460;font-style:italic;}
+.pistol-badge{display:inline-block;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#d4784a;background:rgba(212,120,74,0.12);padding:2px 7px;margin-bottom:6px;border-left:2px solid #d4784a;}
+.coach-note{margin-top:10px;padding:9px 11px;border-left:2px solid #c9a84c;background:rgba(201,168,76,0.05);font-size:11px;color:#6a6460;line-height:1.6;}
+.km-banner{background:rgba(42,170,106,0.08);border-left:3px solid #2aaa6a;padding:10px 14px;margin-bottom:12px;}
+.km-banner-num{font-size:22px;font-weight:700;color:#2aaa6a;line-height:1;}
+.km-banner-label{font-size:10px;color:#6a6460;margin-top:2px;}
+.km-banner-total{font-size:10px;color:#c9a84c;margin-top:4px;}
+.comments-textarea{width:100%;min-height:65px;background:#181818;border:1px solid #2a2a2a;color:#f0ede8;font-size:12px;line-height:1.6;padding:9px 11px;outline:none;resize:vertical;}
+.complete-btn{width:100%;padding:11px;background:transparent;border-top:1px solid #2a2a2a;color:#6a6460;font-size:10px;letter-spacing:2px;text-transform:uppercase;}
+.day-card.done .complete-btn{color:#2aaa6a;background:rgba(42,170,106,0.1);}
+.guide-card{background:#111;border:1px solid #2a2a2a;padding:16px;margin-bottom:10px;}
+.guide-title{font-size:17px;color:#2aaa6a;margin-bottom:8px;font-weight:700;}
+.guide-body{font-size:12px;color:#6a6460;line-height:1.8;white-space:pre-line;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.stat-box{background:#111;border:1px solid #2a2a2a;padding:16px;text-align:center;}
+.stat-val{font-size:34px;color:#2aaa6a;line-height:1;font-weight:700;}
+.stat-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#6a6460;margin-top:6px;}
+footer{text-align:center;padding:24px 18px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#3a3630;border-top:1px solid #2a2a2a;}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-badge">Garage Build - 6 Week Foundation</div>
+  <div class="hero-title">GARAGE<span>BUILD</span></div>
+  <div class="hero-sub">KB + TRX + Jump Rope + Boxing Footwork / 3 Runs (km-based) / Pistol Squat Progression / Park Run Saturdays</div>
+</div>
+<div class="progress-wrap">
+  <div class="progress-row">
+    <span class="progress-label">Overall Progress</span>
+    <span class="progress-val" id="prog-val">0 / 42 Days</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="main" id="main"></div>
+<footer>Garage Build v2 - 6 Weeks / KB + TRX / km-based runs / Data saves in your browser</footer>
+
+<script>
+var DAY_TYPES={1:'run_easy',2:'workout_upper',3:'run_long',4:'workout_lower',5:'workout_hiit',6:'parkrun',7:'rest'};
+var DOWS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+var TYPE_COLORS={run_easy:'#2aaa6a',workout_upper:'#2a8fb0',run_long:'#3d9a68',workout_lower:'#e8c97a',workout_hiit:'#d4784a',parkrun:'#c9a84c',rest:'#6a6460'};
+var TYPE_LABELS={run_easy:'Monday - Easy Run',workout_upper:'Tuesday - KB + TRX Strength',run_long:'Wednesday - Longer Run',workout_lower:'Thursday - Posterior Chain + Pistol Progression',workout_hiit:'Friday - KB HIIT + Boxing Footwork',parkrun:'Saturday - Park Run (5km Benchmark)',rest:'Sunday - Full Rest'};
+
+function getDayType(d){return DAY_TYPES[((d-1)%7)+1];}
+function getWeek(d){return Math.ceil(d/7);}
+function getDow(d){return ((d-1)%7);}
+
+// KM-based run data
+var RUN_KM={
+  run_easy: {1:3,2:3.5,3:4,4:4.5,5:5,6:5.5},
+  run_long: {1:4,2:5,3:6,4:7,5:8,6:9},
+  parkrun:  {1:5,2:5,3:5,4:5,5:5,6:5}
+};
+
+var WEEK_TOTAL_KM={1:12,2:13.5,3:15,4:16.5,5:18,6:19.5};
+
+function getRunDetail(type,week){
+  var details={
+    run_easy:{
+      1:'Walk 5 min warm-up. Run/walk - 3 min run, 1 min walk. Easy conversational pace. Stop if foot flares before you reach the distance.',
+      2:'Walk 5 min. 3 min run, 1 min walk. Slightly further than Week 1 - notice how the foot responds at the extra distance.',
+      3:'Walk 5 min. 4 min run, 1 min walk. You are at 4km now. This is real running distance.',
+      4:'Walk 5 min. 5 min run, 1 min walk. Foot should be adapting well by now.',
+      5:'Walk 5 min. 6 min run, 1 min walk. 5km on a Monday - solid base building.',
+      6:'Walk 5 min. 8 min run, 1 min walk. Final easy run of Block 1. How does this compare to Week 1?'
+    },
+    run_long:{
+      1:'Walk 5 min. 3 min run, 1 min walk. Your biggest run of the week. Keep the pace honest - this is not a race.',
+      2:'Walk 5 min. 3 min run, 1 min walk. 5km mid-week. Same as park run distance - notice how it feels compared to Saturday.',
+      3:'Walk 5 min. 4 min run, 1 min walk. 6km. You are building real distance toward the 50km.',
+      4:'Walk 5 min. 5 min run, 1 min walk. 7km mid-week. The ultra is starting to feel less abstract.',
+      5:'Walk 5 min. 6 min run, 1 min walk. 8km. This is a proper run now. Foot check after - note 0-10.',
+      6:'Walk 5 min. 8 min run, 1 min walk. 9km. The longest run of the block. Take your time and enjoy it.'
+    },
+    parkrun:{
+      1:'Week 1 benchmark - run/walk the whole way. Note your time. Enjoy the run with your daughter. This number is your 6-week comparison point.',
+      2:'Beat Week 1 time if the foot allows. Same run/walk strategy. No heroics.',
+      3:'Third park run. You should feel fitter than Week 1. Metatarsal pad in, recovery sandals straight after.',
+      4:'Halfway mark. Note your time vs Week 1. 20+ km in your legs this week alone.',
+      5:'Push a little more this week if the foot has been good. Your fitness base is real now.',
+      6:'Final benchmark. Compare to Week 1. 6 weeks of consistent work in your legs. Bring your daughter home strong.'
+    }
+  };
+  return details[type]?details[type][week]||'':'';
+}
+
+// Pistol squat progression by week
+var PISTOL_PROG={
+  1:{name:'Assisted Box Squat - high box (TRX hold)',detail:'Stand in front of a high box or chair. Hold TRX straps for balance. Lower onto box with one leg extended forward. Stand back up. 3x8 each leg. Focus on control, not depth.',badge:'Pistol Week 1 - Box Squat (High)'},
+  2:{name:'Assisted Box Squat - lower box (TRX hold)',detail:'Same as Week 1 but move to a lower surface - edge of couch, low step. 3x10 each leg. The lower the box the harder. Do not collapse at the bottom.',badge:'Pistol Week 2 - Box Squat (Lower)'},
+  3:{name:'TRX Assisted Pistol Squat',detail:'Face TRX anchor, hold handles with arms straight. Lower into pistol position - one leg extended, lower as deep as comfortable. TRX takes some weight. 3x8 each leg. This is your first real pistol shape.',badge:'Pistol Week 3 - TRX Assisted'},
+  4:{name:'TRX Assisted Pistol Squat - deeper',detail:'Same as Week 3 but aim for deeper knee bend each rep. 3x10 each leg. If you can touch the floor with your glute, that is a full pistol range. Do not rush depth.',badge:'Pistol Week 4 - TRX Assisted (Deeper)'},
+  5:{name:'Counterweight Pistol Squat - 6kg KB',detail:'Hold 6kg KB out in front with both hands as a counterbalance. Without TRX support. Lower into pistol. The KB keeps you from falling back. 3x8 each leg. This is the big step.',badge:'Pistol Week 5 - Counterweight KB'},
+  6:{name:'Counterweight Pistol + First Unassisted Attempt',detail:'3x8 counterweight each leg. Then attempt 1-3 unassisted reps each side - no KB, no TRX. Use a wall nearby for safety. Even a partial rep counts. Note how far you got in comments.',badge:'Pistol Week 6 - First Unassisted Attempt'}
+};
+
+function getSets(week){return week<=2?'2':'3';}
+function getReps(week){return week<=2?'12':week<=4?'15':'15';}
+
+function getWorkout(type,week){
+  var s=getSets(week);
+  var r=getReps(week);
+  var sr=s+'x'+r;
+  var pistol=PISTOL_PROG[week]||PISTOL_PROG[1];
+
+  var workouts={
+    workout_upper:{
+      note:'Strength focus. 45-60 sec rest between sets. TRX rows and push-ups are your main upper body builders until you get free weights. Strict form - these are harder than they look.',
+      duration:'25-35 min',
+      sections:[
+        {label:'Warm-Up (3 min)',color:'#c9a84c',ex:[
+          {name:'Jump Rope',detail:week<=2?'60 sec easy':'90 sec easy'},
+          {name:'Boxing Footwork Drills',detail:'60 sec - side to side, forward back, light feet'},
+          {name:'Arm Circles + Shoulder Rolls',detail:'30 sec each direction'},
+        ]},
+        {label:'KB + TRX Strength',color:'#2a8fb0',ex:[
+          {name:'TRX Row',detail:sr+' - body at 45 deg, pull chest to handles, squeeze shoulder blades'},
+          {name:'KB Goblet Squat',detail:sr+' - KB at chest, squat deep, drive through heels'},
+          {name:'TRX Push-Up',detail:sr+' - feet in handles, body straight, full range'},
+          {name:'KB Romanian Deadlift',detail:sr+' - hinge at hips, slight knee bend, feel the hamstrings'},
+          {name:'TRX Face Pull',detail:sr+' - lean back, pull to forehead, elbows high'},
+          {name:'KB Single Arm Overhead Press',detail:s+'x10 each side - strong base, press directly overhead'},
+        ]},
+        {label:'Finisher',color:'#d4784a',ex:[
+          {name:'Jump Rope',detail:week<=2?'3x30 sec fast':'3x45 sec fast'},
+          {name:'TRX Plank',detail:'2x30 sec - feet in handles, body rigid, hips flat'},
+        ]},
+      ]
+    },
+    workout_lower:{
+      note:'Posterior chain and pistol progression. Strong glutes and hamstrings protect your lower back and offload the forefoot on long runs. The pistol squat work is your long game - do not rush it.',
+      duration:'25-35 min',
+      sections:[
+        {label:'Warm-Up (3 min)',color:'#c9a84c',ex:[
+          {name:'Jump Rope',detail:week<=2?'60 sec':'90 sec'},
+          {name:'Boxing Footwork',detail:'60 sec - in-out side steps, stay light on feet'},
+          {name:'Hip Circles',detail:'10 each direction - loosen hips before hinging work'},
+        ]},
+        {label:'Pistol Squat Progression - Week '+week,color:'#d4784a',pistol:pistol,ex:[
+          {name:pistol.name,detail:pistol.detail,isPistol:true},
+        ]},
+        {label:'Posterior Chain',color:'#e8c97a',ex:[
+          {name:'Seated Good Morning (KB behind neck)',detail:sr+' - sit on chair, KB behind neck, hinge forward from hips, drive back up'},
+          {name:'KB Swing',detail:sr+' - explosive hip hinge, KB floats to shoulder height, drive with hips not arms'},
+          {name:'TRX Single-Leg RDL',detail:s+'x'+r+' each leg - hold TRX for balance, hinge forward on one leg'},
+          {name:'KB Sumo Deadlift',detail:sr+' - wide stance, both hands on one KB, hinge and pull'},
+          {name:'TRX Hip Bridge',detail:sr+' - feet in handles, drive hips to ceiling, squeeze glutes at top'},
+        ]},
+        {label:'Foot Strengthening',color:'#8b4a9c',ex:[
+          {name:'Toe Spread and Press',detail:'3x15 - barefoot, spread toes wide, press into floor, hold 2 sec'},
+          {name:'Short Foot Arch Lift',detail:'3x10 x 5 sec - pull ball of foot toward heel without curling toes'},
+          {name:'Single Leg Calf Raise',detail:'3x15 each - on a step if available, full range of motion'},
+        ]},
+      ]
+    },
+    workout_hiit:{
+      note:'HIIT and boxing footwork. Short rest, high effort. The boxing footwork drills build fast-twitch coordination that transfers directly to trail running agility and rocky terrain.',
+      duration:'20-30 min',
+      sections:[
+        {label:'Warm-Up (3 min)',color:'#c9a84c',ex:[
+          {name:'Jump Rope',detail:'2 min easy'},
+          {name:'Boxing Footwork',detail:'60 sec - jab-cross footwork, pivot steps, slide steps'},
+        ]},
+        {label:'KB HIIT Circuit - '+(week<=2?'3':'4')+' rounds',color:'#d4784a',ex:[
+          {name:'KB Swing',detail:(week<=2?'30':'40')+' sec on / 20 sec rest - max effort'},
+          {name:'Jump Rope - fast',detail:(week<=2?'30':'40')+' sec - push the pace'},
+          {name:'KB Goblet Squat to Press',detail:(week<=2?'30':'40')+' sec - squat, stand, press overhead'},
+          {name:'Boxing Footwork - 3 forward 3 back',detail:(week<=2?'20':'30')+' sec - stay light on feet'},
+          {name:'TRX Atomic Push-Up',detail:(week<=2?'30':'40')+' sec - push-up then tuck knees to chest'},
+          {name:'KB Alternating Reverse Lunge',detail:(week<=2?'30':'40')+' sec - step back, knee near floor, drive up'},
+        ]},
+        {label:'Finisher',color:'#c9a84c',ex:[
+          {name:'Jump Rope Max Effort',detail:(week<=2?'60':'90')+' sec - fast as you can, rest 30 sec, repeat x2'},
+          {name:'Boxing Shadow Work',detail:'60 sec - move, throw punches, stay light on feet'},
+        ]},
+      ]
+    },
+    rest:{
+      note:'Full rest. Surf if available - prone paddling is excellent cross-training with zero foot load. Light walk if legs feel heavy.',
+      duration:'',
+      sections:[
+        {label:'Active Rest Options',color:'#6a6460',ex:[
+          {name:'Easy walk 20-30 min',detail:'Optional - keep it gentle'},
+          {name:'Surf if available',detail:'Best possible rest day activity - zero foot load, full body work'},
+        ]},
+      ]
+    }
+  };
+  return workouts[type]||workouts.rest;
+}
+
+// Scoliosis daily 3
+var SCOLIOSIS=[
+  {id:'sc_trx',   name:'TRX Hang',detail:'Anchor TRX high, grip handles, walk feet forward, let body hang back - 3x30 sec. Decompresses the spine.'},
+  {id:'sc_ttn',   name:'Thread the Needle - LEFT arm bias',detail:'3x45 sec - slide left arm under body, rotate thoracic against your curve. Left side only.'},
+  {id:'sc_breath',name:'Left Side Rib Breathing',detail:'10 slow breaths - lie on left side, breathe deep, let ribs sink on exhale.'},
+];
+
+// Run day stretch
+var RUN_STRETCH=[
+  {id:'rs_cc',   name:'Cat-Cow',detail:'10 slow reps'},
+  {id:'rs_kneeX',name:'Right Knee Cross-Body Pull',detail:'60 sec - pull right knee toward left shoulder'},
+  {id:'rs_sideR',name:'Side Bend Stretch - RIGHT side only',detail:'60 sec - arm overhead, lean right'},
+  {id:'rs_foam', name:'Foam Roller Thoracic - left of centre',detail:'2 min'},
+  {id:'rs_hip',  name:'Hip Flexor Couch Stretch',detail:'90 sec each side'},
+  {id:'rs_calf', name:'Calf + Achilles Stretch',detail:'45 sec each side'},
+  {id:'rs_ham',  name:'Hamstring Stretch',detail:'45 sec each side'},
+];
+
+// Storage
+function load(){try{return JSON.parse(localStorage.getItem('garage_v2')||'{}')}catch(e){return{}}}
+function save(s){try{localStorage.setItem('garage_v2',JSON.stringify(s))}catch(e){}}
+var S=load();
+if(!S.checked)S.checked={};
+if(!S.dayDone)S.dayDone={};
+if(!S.comments)S.comments={};
+if(!S.parkrunTimes)S.parkrunTimes={};
+
+function exKey(day,id){return 'd'+day+'_'+id;}
+
+function renderCheckRow(day,item,accent){
+  var key=exKey(day,item.id||('ex_'+item.name.replace(/[^a-z0-9]/gi,'').toLowerCase().substr(0,15)));
+  var checked=!!S.checked[key];
+  var div=document.createElement('div');
+  div.className='ex-row'+(checked?' checked':'');
+  div.id='cr-'+key;
+  var btn=document.createElement('button');
+  btn.className='ex-check';btn.innerHTML='&#10003;';
+  btn.style.borderColor=checked?accent:'#2a2a2a';
+  btn.style.background=checked?accent:'none';
+  btn.style.color=checked?'white':'transparent';
+  btn.onclick=function(){
+    S.checked[key]=!S.checked[key];save(S);
+    div.classList.toggle('checked',S.checked[key]);
+    btn.style.borderColor=S.checked[key]?accent:'#2a2a2a';
+    btn.style.background=S.checked[key]?accent:'none';
+    btn.style.color=S.checked[key]?'white':'transparent';
+  };
+  div.appendChild(btn);
+  var info=document.createElement('div');
+  if(item.isPistol){
+    var badge=document.createElement('div');badge.className='pistol-badge';
+    badge.textContent=PISTOL_PROG[parseInt(key.substr(1))||1]?PISTOL_PROG[parseInt(key.substr(1))||1].badge||'Pistol Progression':'Pistol Progression';
+    info.appendChild(badge);
+  }
+  var nm=document.createElement('div');nm.className='ex-name';nm.textContent=item.name;
+  var det=document.createElement('div');det.className='ex-sets';det.textContent=item.detail||'';
+  info.appendChild(nm);if(item.detail)info.appendChild(det);
+  div.appendChild(info);
+  return div;
+}
+
+function sectionLabel(text,color){
+  var div=document.createElement('div');div.className='section-label';
+  var span=document.createElement('span');span.textContent=text;span.style.color=color;
+  div.appendChild(span);return div;
+}
+
+function coachNote(text,color){
+  var div=document.createElement('div');div.className='coach-note';
+  div.style.borderLeftColor=color||'#c9a84c';
+  var strong=document.createElement('strong');
+  strong.style.cssText='color:'+(color||'#c9a84c')+';font-style:normal;font-size:9px;letter-spacing:1px;text-transform:uppercase;';
+  strong.textContent='Coach';
+  var br=document.createElement('br');
+  div.appendChild(strong);div.appendChild(br);
+  var tn = document.createElement('span'); tn.textContent = text; div.appendChild(tn);
+  return div;
+}
+
+function buildDayCard(day){
+  var type=getDayType(day);
+  var week=getWeek(day);
+  var isRun=type==='run_easy'||type==='run_long'||type==='parkrun';
+  var isWorkout=type==='workout_upper'||type==='workout_lower'||type==='workout_hiit';
+  var isParkrun=type==='parkrun';
+  var isRest=type==='rest';
+  var isDone=!!S.dayDone[day];
+  var color=TYPE_COLORS[type]||'#2aaa6a';
+  var dow=getDow(day);
+  var w=getWorkout(type,week);
+  var km=RUN_KM[type]?RUN_KM[type][week]:0;
+
+  var card=document.createElement('div');
+  card.className='day-card'+(isDone?' done':'');
+  card.id='card-'+day;
+
+  // Header
+  var hdr=document.createElement('div');hdr.className='day-header';
+  hdr.onclick=function(){card.classList.toggle('open');};
+  var numWrap=document.createElement('div');
+  var numEl=document.createElement('div');numEl.className='day-num';
+  numEl.style.color=isDone?color:'#2a2a2a';
+  numEl.textContent=String(day).padStart(2,'0');
+  var dowEl=document.createElement('div');dowEl.className='day-dow';dowEl.textContent=DOWS[dow];
+  numWrap.appendChild(numEl);numWrap.appendChild(dowEl);
+  var titleWrap=document.createElement('div');titleWrap.style.cssText='flex:1;min-width:0';
+  var titleEl=document.createElement('div');titleEl.className='day-title';titleEl.style.color=color;
+  titleEl.textContent=TYPE_LABELS[type]||'';
+  var weekEl=document.createElement('div');weekEl.className='day-week';
+  weekEl.textContent='Week '+week+(isRun?' - '+km+'km run':(isWorkout?' - 20-40 min':' - Rest'));
+  titleWrap.appendChild(titleEl);titleWrap.appendChild(weekEl);
+  var chevron=document.createElement('div');chevron.className='day-chevron';chevron.innerHTML='&#9660;';
+  hdr.appendChild(numWrap);hdr.appendChild(titleWrap);hdr.appendChild(chevron);
+  card.appendChild(hdr);
+
+  var body=document.createElement('div');body.className='day-body';
+
+  // RUN SESSION
+  if(isRun){
+    var rsec=document.createElement('div');rsec.className='section';
+    rsec.appendChild(sectionLabel(isParkrun?'Park Run - 5km Benchmark':'Run Session',color));
+
+    // KM banner
+    var kmb=document.createElement('div');kmb.className='km-banner';
+    var kmbNum=document.createElement('div');kmbNum.className='km-banner-num';kmbNum.textContent=km+'km';
+    var kmbLbl=document.createElement('div');kmbLbl.className='km-banner-label';
+    kmbLbl.textContent=isParkrun?'Park Run - weekly benchmark':(type==='run_easy'?'Easy run - build the base':'Mid-week longer effort');
+    var kmbTotal=document.createElement('div');kmbTotal.className='km-banner-total';
+    kmbTotal.textContent='Week '+week+' total: ~'+WEEK_TOTAL_KM[week]+'km (across all 3 runs)';
+    kmb.appendChild(kmbNum);kmb.appendChild(kmbLbl);kmb.appendChild(kmbTotal);
+    rsec.appendChild(kmb);
+
+    var descEl=document.createElement('div');
+    descEl.style.cssText='font-size:12px;color:#6a6460;line-height:1.6;margin-bottom:12px;';
+    descEl.textContent=getRunDetail(type,week);
+    rsec.appendChild(descEl);
+
+    var runChecks=[
+      {id:'rc_warmup',name:'5 min walk warm-up',detail:''},
+      {id:'rc_met',   name:'Metatarsal pad in right shoe',detail:'Behind ball of foot - not under it'},
+      {id:'rc_run',   name:km+'km run session complete',detail:''},
+      {id:'rc_cool',  name:'5 min walk cool-down',detail:''},
+      {id:'rc_ice',   name:'Ice right foot 15-20 min',detail:'Non-negotiable every run day'},
+      {id:'rc_oofas', name:'Oofas recovery sandals on',detail:'Straight after - stay off bare feet on hard floors'},
+    ];
+    runChecks.forEach(function(rc){rsec.appendChild(renderCheckRow(day,rc,color));});
+
+    if(isParkrun){
+      var pw=document.createElement('div');
+      pw.style.cssText='margin-top:10px;padding:10px 12px;background:rgba(201,168,76,0.08);border-left:2px solid #c9a84c;';
+      var pl=document.createElement('div');
+      pl.style.cssText='font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;font-weight:700;';
+      pl.textContent='Park Run Time - Week '+week;
+      pw.appendChild(pl);
+      var pr=document.createElement('div');pr.style.cssText='display:flex;align-items:center;gap:10px;';
+      var ptl=document.createElement('div');ptl.style.cssText='font-size:11px;color:#6a6460;flex:1;';
+      ptl.textContent='Finish time (mm:ss):';
+      var pinp=document.createElement('input');
+      pinp.type='text';pinp.placeholder='e.g. 32:45';
+      pinp.style.cssText='width:90px;background:#181818;border:1px solid #2a2a2a;color:#f0ede8;font-size:12px;padding:5px 8px;outline:none;text-align:center;';
+      pinp.value=S.parkrunTimes[week]||'';
+      pinp.oninput=function(e){S.parkrunTimes[week]=e.target.value;save(S);};
+      pr.appendChild(ptl);pr.appendChild(pinp);pw.appendChild(pr);
+      if(week>1&&S.parkrunTimes[1]){
+        var pcomp=document.createElement('div');
+        pcomp.style.cssText='font-size:10px;color:#6a6460;margin-top:6px;';
+        pcomp.textContent='Week 1: '+S.parkrunTimes[1];
+        pw.appendChild(pcomp);
+      }
+      rsec.appendChild(pw);
+    }
+    body.appendChild(rsec);
+
+    // Post-run stretch
+    var msec=document.createElement('div');msec.className='section';
+    msec.appendChild(sectionLabel('Post-Run Stretch + Mobility (10 min)','#3d9a68'));
+    RUN_STRETCH.forEach(function(ex){msec.appendChild(renderCheckRow(day,ex,'#3d9a68'));});
+    body.appendChild(msec);
+  }
+
+  // WORKOUT SECTIONS
+  if(isWorkout){
+    w.sections.forEach(function(sec){
+      var wsec=document.createElement('div');wsec.className='section';
+      wsec.appendChild(sectionLabel(sec.label,sec.color));
+      // Pistol badge for pistol section
+      if(sec.pistol){
+        var pb=document.createElement('div');pb.className='pistol-badge';
+        pb.textContent=sec.pistol.badge;
+        wsec.appendChild(pb);
+      }
+      sec.ex.forEach(function(ex){wsec.appendChild(renderCheckRow(day,ex,sec.color));});
+      body.appendChild(wsec);
+    });
+    var noteSec=document.createElement('div');noteSec.className='section';
+    noteSec.appendChild(coachNote(w.note,color));
+    if(w.duration){
+      var durEl=document.createElement('div');
+      durEl.style.cssText='margin-top:6px;font-size:10px;color:'+color+';font-weight:700;letter-spacing:1px;';
+      durEl.textContent='Target duration: '+w.duration;
+      noteSec.appendChild(durEl);
+    }
+    body.appendChild(noteSec);
+  }
+
+  // REST
+  if(isRest){
+    w.sections.forEach(function(sec){
+      var rsec=document.createElement('div');rsec.className='section';
+      rsec.appendChild(sectionLabel(sec.label,sec.color));
+      sec.ex.forEach(function(ex){rsec.appendChild(renderCheckRow(day,ex,sec.color));});
+      body.appendChild(rsec);
+    });
+    var rnoteSec=document.createElement('div');rnoteSec.className='section';
+    rnoteSec.appendChild(coachNote(w.note,color));
+    body.appendChild(rnoteSec);
+  }
+
+  // SCOLIOSIS - every day
+  var ssec=document.createElement('div');ssec.className='section';
+  ssec.appendChild(sectionLabel('Scoliosis - Daily 5 Min','#c4603a'));
+  SCOLIOSIS.forEach(function(ex){ssec.appendChild(renderCheckRow(day,ex,'#7a3a2a'));});
+  ssec.appendChild(coachNote('Three exercises every day. TRX hang decompresses the spine. Thread the needle LEFT arm counteracts your right thoracic curve. Left rib breathing is clinical scoliosis management. 5 minutes daily.','#7a3a2a'));
+  body.appendChild(ssec);
+
+  // COMMENTS
+  var csec=document.createElement('div');csec.className='section';
+  csec.appendChild(sectionLabel('Notes','#6a6460'));
+  if(isRun){
+    var fh=document.createElement('div');
+    fh.style.cssText='font-size:10px;color:#8b4a9c;margin-bottom:6px;';
+    fh.textContent='Log foot pain rating 0-10 after every run.';
+    csec.appendChild(fh);
+  }
+  if(type==='workout_lower'){
+    var ph=document.createElement('div');
+    ph.style.cssText='font-size:10px;color:#d4784a;margin-bottom:6px;';
+    ph.textContent='Note how far you got on the pistol progression this week.';
+    csec.appendChild(ph);
+  }
+  var ta=document.createElement('textarea');
+  ta.className='comments-textarea';
+  ta.placeholder=isRun?'Foot pain (0-10), how run felt, distance reached...':type==='workout_lower'?'Pistol progress, how deep, which side is harder...':'How session felt, energy levels, anything to note...';
+  ta.value=S.comments[day]||'';
+  ta.oninput=function(e){S.comments[day]=e.target.value;save(S);};
+  csec.appendChild(ta);body.appendChild(csec);
+
+  // COMPLETE
+  var doneBtn=document.createElement('button');
+  doneBtn.className='complete-btn';doneBtn.id='done-'+day;
+  doneBtn.textContent=isDone?'Complete - Day Done':'Mark Day Complete';
+  doneBtn.onclick=function(){
+    S.dayDone[day]=!S.dayDone[day];save(S);
+    card.classList.toggle('done',S.dayDone[day]);
+    doneBtn.textContent=S.dayDone[day]?'Complete - Day Done':'Mark Day Complete';
+    numEl.style.color=S.dayDone[day]?color:'#2a2a2a';
+    updateProgress();buildTabs();
+  };
+  body.appendChild(doneBtn);
+  card.appendChild(body);
+  return card;
+}
+
+var WEEKS=[];
+for(var w=1;w<=6;w++){
+  var days=[];
+  for(var d=1;d<=7;d++){days.push((w-1)*7+d);}
+  var descs={
+    1:'Week 1 - Establish the base. Easy effort on all runs. 2 sets on workouts. First park run benchmark. Pistol: assisted box squat. Total running: ~12km.',
+    2:'Week 2 - Build on Week 1. Runs slightly longer. Pistol: lower box squat. Total running: ~13.5km.',
+    3:'Week 3 - Sets increase to 3. Pistol: first TRX assisted pistol shape. Total running: ~15km.',
+    4:'Week 4 - Mid-program check. Pistol going deeper with TRX. Note foot trends in comments. Total running: ~16.5km.',
+    5:'Week 5 - Building confidence. Pistol: counterweight with 6kg KB - the big step. Total running: ~18km.',
+    6:'Week 6 - Final week. Pistol: first unassisted attempt. Last park run benchmark vs Week 1. Total running: ~19.5km.'
+  };
+  WEEKS.push({label:'Week '+w,days:days,desc:descs[w]||''});
+}
+
+var currentTab=0;
+
+function buildTabs(){
+  var container=document.getElementById('tabs');container.innerHTML='';
+  var allTabs=WEEKS.concat([{label:'Guide',days:[]},{label:'Stats',days:[]}]);
+  allTabs.forEach(function(wk,i){
+    var done=wk.days?wk.days.filter(function(d){return S.dayDone[d];}).length:0;
+    var div=document.createElement('div');
+    div.className='tab'+(currentTab===i?' active':'');
+    div.textContent=wk.label;
+    if(done>0&&wk.days&&wk.days.length){
+      var cnt=document.createElement('span');cnt.className='cnt';
+      cnt.textContent=done+'/'+wk.days.length;div.appendChild(cnt);
+    }
+    div.onclick=function(){currentTab=i;buildTabs();buildContent();};
+    container.appendChild(div);
+  });
+}
+
+function buildContent(){
+  var main=document.getElementById('main');main.innerHTML='';
+  if(currentTab<WEEKS.length){
+    var wk=WEEKS[currentTab];
+    var hdr=document.createElement('div');hdr.className='week-header';
+    var wt=document.createElement('div');wt.className='week-title';wt.textContent='WEEK '+(currentTab+1);
+    var wd=document.createElement('div');wd.className='week-desc';wd.textContent=wk.desc;
+    hdr.appendChild(wt);hdr.appendChild(wd);main.appendChild(hdr);
+    wk.days.forEach(function(day){main.appendChild(buildDayCard(day));});
+  } else if(currentTab===WEEKS.length){
+    buildGuide(main);
+  } else {
+    buildStats(main);
+  }
+}
+
+function buildGuide(main){
+  var hdr=document.createElement('div');hdr.className='week-header';
+  var wt=document.createElement('div');wt.className='week-title';wt.style.color='#6a6460';wt.textContent='GUIDE';
+  hdr.appendChild(wt);main.appendChild(hdr);
+
+  var cards=[
+    {title:'The 6 Week Goal',color:'#2aaa6a',body:'Block 1 of your 12-month ultra build. By Week 6 you are running 19.5km per week across 3 sessions, completing park run with your daughter every Saturday, and working toward your first pistol squat.\n\nBy the end of 12 months you will be running 50km. Every km this week is a brick in that foundation.'},
+    {title:'Pistol Squat - 6 Week Progression',color:'#d4784a',body:'Week 1: Assisted box squat (high box, TRX hold) - 3x8 each leg\nWeek 2: Box squat lower surface (TRX hold) - 3x10 each leg\nWeek 3: TRX assisted pistol squat - 3x8 each leg\nWeek 4: TRX assisted pistol - deeper range - 3x10 each leg\nWeek 5: Counterweight pistol with 6kg KB - 3x8 each leg\nWeek 6: Counterweight + first unassisted attempt\n\nThe pistol squat is a 6-12 month journey for most people. Do not rush the progression. Each step builds the ankle mobility, hip flexibility and single-leg strength you need. Note every Thursday which side is weaker - that is your priority side.'},
+    {title:'KB Swing - The Key Movement',color:'#e8c97a',body:'The KB swing is your best posterior chain exercise. Do not squat it.\n\nStand feet shoulder width. KB on floor in front. Hinge at hips, grip KB. Drive hips forward explosively - this swings the KB, not your arms. KB floats to shoulder height. As it falls hinge hips back. Repeat.\n\nThe hip hinge is the same pattern as running stride, surfing pop-up, and every athletic explosive movement. Master this and everything else gets easier.'},
+    {title:'Seated Good Morning - How To',color:'#e8c97a',body:'Sit on a sturdy chair or box. Place KB behind neck or hold at chest. Keeping back flat and chest up, hinge forward at hips - lean your torso forward until you feel hamstrings and lower back load. Hold 1 sec. Drive back up.\n\nStart bodyweight only until the movement feels natural. This is your main posterior chain exercise without a barbell. The seated position isolates the hip hinge properly.'},
+    {title:'Morton\'s Neuroma - Run Day Protocol',color:'#8b4a9c',body:'Every run day without exception:\n1. Metatarsal pad in right shoe - behind ball of foot\n2. K-tape if using - apply before shoe\n3. Complete the km target\n4. Walk cool-down\n5. Ice right foot 15-20 min immediately after\n6. Oofas sandals on straight after\n7. Rate foot pain 0-10 in comments\n\n0-3: on track. 4-6: watch it. 7+: rest day tomorrow.\n\nIf foot flares two sessions in a row, drop the km targets by 20% for one week before building again.'},
+    {title:'Scoliosis - Daily 5 Min',color:'#c4603a',body:'Three exercises every day:\n\n1. TRX Hang (3x30 sec): Anchor TRX high, grip handles, walk feet forward and hang at an angle. Decompresses the lumbar spine. Replace with doorframe hang or full dead hang when you get a pull-up bar.\n\n2. Thread the Needle LEFT arm (3x45 sec): On all fours, slide left arm under body and rotate. Counteracts your right thoracic curve. Left side is your therapeutic direction.\n\n3. Left Side Rib Breathing (10 breaths): Lie on left side, breathe deep, let left ribs sink on exhale. Clinical scoliosis management.\n\n5 minutes. Every day. Do it while watching TV if needed.'},
+    {title:'Building Toward 12 Months',color:'#c9a84c',body:'Block 1 (Weeks 1-6): KB + TRX foundation. ~12-20km per week. Pistol progression begins.\nBlock 2 (Weeks 7-12): Add gear as available. Runs build toward 25km per week. Pistol counterweight mastered.\nBlock 3 (Months 4-6): First fun runs. Wednesday run building toward 12-15km. Unassisted pistol achieved.\nBlock 4 (Months 7-9): First trail runs. Back-to-back weekends. 30km+ per week.\nBlock 5 (Months 10-12): Peak build. Long runs 20km+. Taper into the 50km event.\n\nYou are at the very start. Every session this block matters.'},
+  ];
+
+  cards.forEach(function(c){
+    var card=document.createElement('div');card.className='guide-card';
+    var gt=document.createElement('div');gt.className='guide-title';gt.style.color=c.color;gt.textContent=c.title;
+    var gb=document.createElement('div');gb.className='guide-body';gb.textContent=c.body;
+    card.appendChild(gt);card.appendChild(gb);main.appendChild(card);
+  });
+}
+
+function buildStats(main){
+  var done=Object.values(S.dayDone).filter(Boolean).length;
+  var checked=Object.values(S.checked).filter(Boolean).length;
+  var hdr=document.createElement('div');hdr.className='week-header';
+  var wt=document.createElement('div');wt.className='week-title';wt.style.color='#6a6460';wt.textContent='YOUR STATS';
+  hdr.appendChild(wt);main.appendChild(hdr);
+  var grid=document.createElement('div');grid.className='stats-grid';
+  [{v:done,l:'Days Complete'},{v:42-done,l:'Days Remaining'},{v:checked,l:'Items Ticked'},{v:Math.round((done/42)*100)+'%',l:'Complete'}]
+    .forEach(function(s){
+      var box=document.createElement('div');box.className='stat-box';
+      var sv=document.createElement('div');sv.className='stat-val';sv.textContent=s.v;
+      var sl=document.createElement('div');sl.className='stat-lbl';sl.textContent=s.l;
+      box.appendChild(sv);box.appendChild(sl);grid.appendChild(box);
+    });
+  main.appendChild(grid);
+  var hasTime=false;
+  for(var w=1;w<=6;w++){if(S.parkrunTimes[w])hasTime=true;}
+  if(hasTime){
+    var pcard=document.createElement('div');pcard.className='guide-card';
+    var pt=document.createElement('div');pt.className='guide-title';pt.style.color='#c9a84c';pt.textContent='Park Run Times';
+    pcard.appendChild(pt);
+    for(var wk=1;wk<=6;wk++){
+      if(S.parkrunTimes[wk]){
+        var pr=document.createElement('div');
+        pr.style.cssText='display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #2a2a2a;font-size:12px;';
+        var pwl=document.createElement('span');pwl.style.color='#6a6460';pwl.textContent='Week '+wk;
+        var pvl=document.createElement('span');pvl.style.cssText='color:#c9a84c;font-weight:700;';pvl.textContent=S.parkrunTimes[wk];
+        pr.appendChild(pwl);pr.appendChild(pvl);pcard.appendChild(pr);
+      }
+    }
+    main.appendChild(pcard);
+  }
+}
+
+function updateProgress(){
+  var done=Object.values(S.dayDone).filter(Boolean).length;
+  document.getElementById('prog-val').textContent=done+' / 42 Days';
+  document.getElementById('prog-fill').style.width=(done/42*100)+'%';
+}
+
+buildTabs();buildContent();updateProgress();
+</script>
+</body>
+</html>
